@@ -24,15 +24,12 @@ head(dat6)
 # country - country where sampling occured
 # ysw - year since WNS arrived; an arbitrarily large number is displayed for non-US sites. This isn't used for analyses but helps to maintain consistency in column types. 
 # WNS - 1 = WNS present, 0 = WNS absent
-# count - the number of bats counted in the winter year of sampling of that species
 # years - the year of sampling, generally identically to wyear unless there is a December count
 # x_lags - the number of years between counts
 # lambda = (count/previous count) ^(1/x_lags)
-# logcount = log10(count)
 # country2 = country name repeated
 # ysw2 - ysw repeated
 # country3 - cleaned up properly capitalized country name
-# lcount - log(count), e.g. natural log
 
 
 prior=set_prior("normal(0,10)", class = "b")
@@ -106,7 +103,7 @@ colScale <- scale_colour_manual(name = "country3",values = cols)
 
 p=ggplot(data=dat6, aes(x=species2, y=lambda))+#fill=species, 
   geom_abline(intercept = 1,slope=0,linetype="dashed", color="red")+
-  geom_point(aes(color=country3,size=lcount),alpha=.6)+
+  geom_point(aes(color=country3),alpha=.6)+
   guides(size=FALSE)+
   geom_point(data = newdat_i,aes(x=species2, y=Estimate),color="black")+
   geom_pointrange(data=newdat_i,aes(x=species2, y=Estimate, ymin = lower, ymax = upper), 
@@ -130,11 +127,9 @@ head(dat4)
 # country - country where sampling occured
 # ysw - years since WNS arrived with 0 as the winter year that WNS was first detected
 # WNS - 1 = WNS present, 0 = WNS absent
-# count - the number of bats counted in the winter year of sampling of that species
 # years - the year of sampling, identically to wyear (only late winter counts)
 # x_lags - the number of years between counts
 # lambda = (count/previous count) ^(1/x_lags)
-# logcount = log10(count)
 # country2 = country name pasted together with years since WNS, e.g. us 0 is the year WNS arrived
 # mlambda - this is the mean lambda of a species; it is just used for sorting the dataframe
 # ysw2 - this is ysw repeated, but groups all the >=(-1) data into -1, e.g. pre-WNS arrival
@@ -200,7 +195,7 @@ names(newdat_l1)
 p1=ggplot(data=dat4, aes(x=new_spec, y=Estimate, color=ysw3))+#fill=species, 
   facet_wrap(~ysw3,ncol=5, scales = "free_x",labeller = as_labeller(ysw_names))+#scales = "free_x",
   geom_abline(intercept = 1,slope=0,linetype="dashed", color="red")+
-  geom_point(data=dat4,aes(color=ysw2, size=logcount),position = position_dodge(1),alpha=.5)+#size=2.5\
+  geom_point(data=dat4,aes(color=ysw2),position = position_dodge(1),alpha=.5)+#size=2.5\
   geom_vline(data=filter(dat4, ysw2=="-1"|ysw2=="0"), aes(xintercept=4.5)) + 
   geom_vline(data=filter(dat4, ysw2=="1"|ysw2=="2"|ysw2=="3"), aes(xintercept=5.5)) + 
   geom_point(data=newdat_l1, aes(x=new_spec,y=Estimate),position = position_dodge(1), size=4, color="black")+#size=2.5
